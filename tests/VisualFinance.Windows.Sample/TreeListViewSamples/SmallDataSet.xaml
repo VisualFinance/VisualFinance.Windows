@@ -1,0 +1,38 @@
+﻿<Window x:Class="VisualFinance.Windows.Sample.TreeListViewSamples.SmallDataSet"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vf="clr-namespace:VisualFinance.Windows.Controls;assembly=VisualFinance.Windows"
+        xmlns:Converters="clr-namespace:VisualFinance.Windows.Converters;assembly=VisualFinance.Windows"
+        xmlns:TreeListViewSamples="clr-namespace:VisualFinance.Windows.Sample.TreeListViewSamples" 
+        Title="SmallDataSet" 
+        Height="500" Width="1000">
+    <Control.Resources>
+        <Converters:FileSizeConverter x:Key="FileSizeConverter"/>
+        <TreeListViewSamples:IndentConverter x:Key="IndentConverter"/>
+        <HierarchicalDataTemplate DataType="{x:Type TreeListViewSamples:Folder}"
+                                  ItemsSource="{Binding Children}"
+                                  />
+    </Control.Resources>
+    <DockPanel>
+        <!--Need to add padding for children and expander toggle-->
+        <vf:TreeListView ItemsSource="{Binding Children}">
+            <vf:TreeListView.Columns>
+                <vf:TreeListViewColumnCollection>
+                    <GridViewColumn Header="Name">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" 
+                                            Margin="{Binding Parent.Depth, Converter={StaticResource IndentConverter}}">
+                                    <CheckBox IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=vf:TreeListViewItem}, Path=IsExpanded}"/>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Size" DisplayMemberBinding="{Binding Length, Converter={StaticResource FileSizeConverter}}"/>
+                </vf:TreeListViewColumnCollection>
+            </vf:TreeListView.Columns>
+
+        </vf:TreeListView>
+    </DockPanel>
+</Window>

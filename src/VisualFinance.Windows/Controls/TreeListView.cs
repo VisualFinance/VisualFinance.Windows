@@ -214,7 +214,8 @@ namespace VisualFinance.Windows.Controls
 
         void OnHeaderRowPresenterLoaded(object sender, RoutedEventArgs e)
         {
-            if (Columns != null)
+            //Columns should only update once the _headerRowPresenter is loaded and has been laid out, else WPF engine throws indexOutOfRane on a Visual Children collection.
+            if (Columns != null && _headerRowPresenter.IsLoaded && _headerRowPresenter.IsArrangeValid && _headerRowPresenter.IsMeasureValid)
             {
                 Columns.IsBound = true;
             }
