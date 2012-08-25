@@ -5,31 +5,97 @@
         xmlns:Converters="clr-namespace:VisualFinance.Windows.Converters;assembly=VisualFinance.Windows"
         xmlns:TreeListViewSamples="clr-namespace:VisualFinance.Windows.Sample.TreeListViewSamples" 
         Title="SmallDataSet" 
-        Height="500" Width="1000">
+        Height="500" Width="800">
     <Control.Resources>
         <Converters:FileSizeConverter x:Key="FileSizeConverter"/>
-        <TreeListViewSamples:IndentConverter x:Key="IndentConverter"/>
-        <HierarchicalDataTemplate DataType="{x:Type TreeListViewSamples:Folder}"
-                                  ItemsSource="{Binding Children}"
-                                  />
+        <TreeListViewSamples:ThicknessValueConverter x:Key="IndentConverter"
+                                                     LeftScale="5"/>
+        <TreeListViewSamples:FileSystemNodeStyleSelector x:Key="NodeStyleSelector">
+            <TreeListViewSamples:FileSystemNodeStyleSelector.FolderStyle>
+                <Style TargetType="vf:TreeListViewItem">
+                    <Setter Property="Foreground" Value="Gray"/>
+                    <Setter Property="Background" Value="Khaki"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasAccessProblems}" Value="True">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeListViewSamples:FileSystemNodeStyleSelector.FolderStyle>
+            <TreeListViewSamples:FileSystemNodeStyleSelector.FileStyle>
+                <Style TargetType="vf:TreeListViewItem">
+                    <Setter Property="Foreground" Value="Gray"/>
+                    <Setter Property="Background" Value="White"/>
+                </Style>
+            </TreeListViewSamples:FileSystemNodeStyleSelector.FileStyle>
+        </TreeListViewSamples:FileSystemNodeStyleSelector>
+        <HierarchicalDataTemplate DataType="{x:Type TreeListViewSamples:FolderNode}"
+                                  ItemsSource="{Binding Children}"/>
+        <HierarchicalDataTemplate DataType="{x:Type TreeListViewSamples:FileNode}"/>
     </Control.Resources>
     <DockPanel>
         <!--Need to add padding for children and expander toggle-->
-        <vf:TreeListView ItemsSource="{Binding Children}">
+        <vf:TreeListView ItemsSource="{Binding Children}"
+                         ItemContainerStyleSelector="{StaticResource NodeStyleSelector}">
             <vf:TreeListView.Columns>
                 <vf:TreeListViewColumnCollection>
                     <GridViewColumn Header="Name">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" 
-                                            Margin="{Binding Parent.Depth, Converter={StaticResource IndentConverter}}">
-                                    <CheckBox IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=vf:TreeListViewItem}, Path=IsExpanded}"/>
+                                    Margin="{Binding Parent.Depth, Converter={StaticResource IndentConverter}}">
+                                    <CheckBox IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=vf:TreeListViewItem}, Path=IsExpanded}">
+                                        <CheckBox.Style>
+                                            <Style TargetType="CheckBox">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=vf:TreeListViewItem}, Path=HasItems}" 
+                                                                 Value="False">
+                                                        <Setter Property="Visibility" Value="Hidden"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </CheckBox.Style>
+                                    </CheckBox>
                                     <TextBlock Text="{Binding Name}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Size" DisplayMemberBinding="{Binding Length, Converter={StaticResource FileSizeConverter}}"/>
+
+                    <GridViewColumn Header="Size" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Length, Converter={StaticResource FileSizeConverter}}"
+                                           TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Children" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Children.Count}"
+                                           TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Descendants" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DescendantCount}"
+                                           TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Created">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding CreatedDate, StringFormat={}{0:MM/dd/yyyy HH:mm:ss}}"
+                                           TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </vf:TreeListViewColumnCollection>
             </vf:TreeListView.Columns>
 

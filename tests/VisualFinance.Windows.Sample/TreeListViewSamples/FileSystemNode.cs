@@ -7,12 +7,13 @@ namespace VisualFinance.Windows.Sample.TreeListViewSamples
     public abstract class FileSystemNode : INotifyPropertyChanged
     {
         private readonly string _fullPath;
-        private readonly Folder _parent;
+        private readonly FolderNode _parent;
         private readonly int _depth;
+        private int _descendantCount;
         private bool _isLoaded;
         private long _length;
 
-        protected FileSystemNode(string fullPath, Folder parent)
+        protected FileSystemNode(string fullPath, FolderNode parent)
         {
             _fullPath = fullPath;
             _parent = parent;
@@ -58,11 +59,22 @@ namespace VisualFinance.Windows.Sample.TreeListViewSamples
             get { return _depth; }
         }
 
-        public abstract DateTimeOffset CreatedDate { get; set; }
-        public abstract string CreatedBy { get; set; }
-        public abstract DateTimeOffset ModifiedDate { get; set; }
+        public int DescendantCount
+        {
+            get { return _descendantCount; }
+            set
+            {
+                _descendantCount = value;
+                OnPropertyChanged("DescendantCount");
+            }
+        }
 
-        public Folder Parent
+
+        public DateTimeOffset CreatedDate { get; protected set; }
+        public string CreatedBy { get; protected set; }
+        public DateTimeOffset ModifiedDate { get; protected set; }
+
+        public FolderNode Parent
         {
             get { return _parent; }
         }

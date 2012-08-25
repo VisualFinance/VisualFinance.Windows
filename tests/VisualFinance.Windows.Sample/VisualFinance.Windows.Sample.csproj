@@ -72,8 +72,9 @@
     </ApplicationDefinition>
     <Compile Include="TreeListViewSamples\FileNode.cs" />
     <Compile Include="TreeListViewSamples\FileSystemNode.cs" />
-    <Compile Include="TreeListViewSamples\Folder.cs" />
-    <Compile Include="TreeListViewSamples\IndentConverter.cs" />
+    <Compile Include="TreeListViewSamples\FileSystemNodeStyleSelector.cs" />
+    <Compile Include="TreeListViewSamples\FolderNode.cs" />
+    <Compile Include="TreeListViewSamples\ThicknessValueConverter.cs" />
     <Compile Include="TreeListViewSamples\SmallDataSet.xaml.cs">
       <DependentUpon>SmallDataSet.xaml</DependentUpon>
     </Compile>

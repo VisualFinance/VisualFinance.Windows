@@ -1,4 +1,5 @@
-﻿using System.Reactive.Concurrency;
+﻿using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,7 +15,9 @@ namespace VisualFinance.Windows.Sample.TreeListViewSamples
         {
             var evls = new EventLoopScheduler();
             var ds = new DispatcherScheduler(Dispatcher);
-            var folder = new Folder(@"C:\Users\Lee\Documents\GitHub\VisualFinance.Windows\", evls, ds);
+            var myStuff = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            //var folder = new FolderNode(@"C:\Users\Lee\Documents\\", evls, ds);
+            var folder = new FolderNode(myStuff, evls, ds);
             InitializeComponent();
             DataContext = folder;
         }

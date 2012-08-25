@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
@@ -24,6 +23,7 @@ namespace VisualFinance.Windows.Controls
 
         public TreeListViewItem()
         {
+            
             IsKeyboardFocusWithinChanged += TreeListViewItem_IsKeyboardFocusWithinChanged;
             DataContextChanged += TreeListViewItem_DataContextChanged;
             var hasItemsDescr = DependencyPropertyDescriptor.FromProperty(HasItemsProperty, typeof(ItemsControl));
@@ -467,6 +467,8 @@ namespace VisualFinance.Windows.Controls
 
         private void ResizeColumns()
         {
+            if (Columns == null) return;
+            
             //Resize columns
             foreach (var column in Columns)
             {
